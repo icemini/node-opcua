@@ -229,8 +229,15 @@ export class MessageBuilder extends MessageBuilderBase {
             return false;
         }
 
-        // read expandedNodeId:
-        const id = decodeExpandedNodeId(binaryStream);
+        let id: ExpandedNodeId;
+        try {
+            // read expandedNodeId:
+            id = decodeExpandedNodeId(binaryStream);
+        } catch (err) {
+            console.log("Buffer = ", fullMessageBody.toString("hex"));
+            this._report_error("cannot decode expanded nodeId ");
+            return false;
+        }
 
         if (!this.objectFactory.hasConstructor(id)) {
             this._report_error("cannot construct object with nodeID " + id);
